@@ -22,5 +22,8 @@
   "tweakmAutoFillContainer": "tweakmAutoFillContainer | 自动装填容器",
   "tweakmAutoFillContainer.comment": "打开后容器，自动使用物品栏中占用格子数最多的物品装填容器\n当且仅当占用格子数最多的物品是唯一的\n然后关闭容器",
   "tweakmAutoFillContainer.container_filled": "已使用所有 %2$s 物品装填容器 %1$s (%3$s)",
-  "tweakmAutoFillContainer.best_slot_not_found": "未找到最适合装填容器的物品"
+  "tweakmAutoFillContainer.best_slot_not_found": "未找到最适合装填容器的物品",
+
+  "tweakmTradyLapis": "tweakmTradyLapis | Trady青金石交易",
+  "tweakmTradyLapis.comment": "[TIS] 1.13牧师青金石交易助手\n1. 1x腐肉解锁青金石交易\n2. 当青金石交易为1->2时进行交易"
 }

@@ -17,7 +17,11 @@
     "tweaks.netherPortalSoundChance.NetherPortalBlockMixin",
     "tweaks.tweakmAutoContainerProcess.ClientPlayNetworkHandlerMixin",
     "tweaks.tweakmAutoContainerProcess.ContainerMixin",
-    "tweaks.tweakmAutoContainerProcess.ScreenMixin"
+    "tweaks.tweakmAutoContainerProcess.ScreenMixin",
+    "tweaks.tweakmTradyLapis.ContainerScreenAccessor",
+    "tweaks.tweakmTradyLapis.MerchantContainerMixin",
+    "tweaks.tweakmTradyLapis.MerchantScreenAccessor",
+    "tweaks.tweakmTradyLapis.MerchantScreenMixin"
   ],
   "client": [
   ],
