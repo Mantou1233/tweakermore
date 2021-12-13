@@ -2,7 +2,7 @@ package me.fallenbreath.tweakermore.impl.tweakmTrady;
 
 import net.minecraft.client.gui.screen.ingame.MerchantScreen;
 
-public interface MerchantContainerInScreen
+public interface TradyMerchantContainer
 {
 	void setMerchantScreen(MerchantScreen merchantScreen);
 

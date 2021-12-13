@@ -18,6 +18,7 @@
     "tweaks.tweakmAutoContainerProcess.ClientPlayNetworkHandlerMixin",
     "tweaks.tweakmAutoContainerProcess.ContainerMixin",
     "tweaks.tweakmAutoContainerProcess.ScreenMixin",
+    "tweaks.tweakmTradyLapis.ClientPlayNetworkHandlerMixin",
     "tweaks.tweakmTradyLapis.ContainerScreenAccessor",
     "tweaks.tweakmTradyLapis.MerchantContainerMixin",
     "tweaks.tweakmTradyLapis.MerchantScreenAccessor",

@@ -1,6 +1,6 @@
 package me.fallenbreath.tweakermore.mixins.tweaks.tweakmTradyLapis;
 
-import me.fallenbreath.tweakermore.impl.tweakmTrady.MerchantContainerInScreen;
+import me.fallenbreath.tweakermore.impl.tweakmTrady.TradyMerchantContainer;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.client.gui.screen.ingame.MerchantScreen;
 import net.minecraft.container.MerchantContainer;
@@ -22,6 +22,6 @@ public abstract class MerchantScreenMixin extends ContainerScreen<MerchantContai
 	@Inject(method = "init", at = @At("HEAD"))
 	private void onInitScreen(CallbackInfo ci)
 	{
-		((MerchantContainerInScreen)this.container).setMerchantScreen((MerchantScreen)(Object)this);
+		((TradyMerchantContainer)this.container).setMerchantScreen((MerchantScreen)(Object)this);
 	}
 }
