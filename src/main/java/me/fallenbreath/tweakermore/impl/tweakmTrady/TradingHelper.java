@@ -135,6 +135,7 @@ public class TradingHelper
 		// record trade
 		// viaversion will make the server send an inventory update packet after the client sends the offer index
 		// so we will do the trade when the inventory packet is received
+		// https://github.com/ViaVersion/ViaVersion/blob/4074352a531cfb0de6fa81e043ee761737748a7a/common/src/main/java/com/viaversion/viaversion/protocols/protocol1_14to1_13_2/packets/InventoryPackets.java#L238
 		this.tradeInfo = new TradeInfo(offerIndex, tradeAll);
 	}
 
