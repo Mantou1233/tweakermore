@@ -12,6 +12,7 @@ import net.minecraft.container.SlotActionType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TraderOfferList;
 import org.jetbrains.annotations.Nullable;
@@ -52,11 +53,12 @@ public class TradingHelper
 			}
 			else if (current instanceof ItemStack)
 			{
-				if (((ItemStack)current).isEmpty())
+				ItemStack itemStack = (ItemStack) current;
+				if (itemStack.isEmpty())
 				{
 					return false;
 				}
-				return ItemStack.areItemsEqual((ItemStack)current, excepted);
+				return ItemStack.areItemsEqual(itemStack, excepted) && itemStack.getCount() == excepted.getCount();
 			}
 			else if (current instanceof Item)
 			{
@@ -75,17 +77,21 @@ public class TradingHelper
 			int rottenFreshIdx = -1;
 			int lapisLazuliIdx = -1;
 			int redstoneIdx = -1;
+			boolean hasRottenFresh = false;
 			boolean hasLapis = false;
+			boolean hasNiceLapis = false;
 			for (int i = 0; i < traderOfferList.size(); i++)
 			{
 				TradeOffer tradeOffer = traderOfferList.get(i);
-				boolean isLapis = offerMatches(tradeOffer, EMERALD_1x, EMPTY, LAPIS_LAZULI_2x);
-				hasLapis |= isLapis;
+				hasLapis |= offerMatches(tradeOffer, EMERALD_1x, EMPTY, Items.LAPIS_LAZULI);
+				hasRottenFresh |= offerMatches(tradeOffer, Items.ROTTEN_FLESH, EMPTY, EMERALD_1x);
+				boolean flg = offerMatches(tradeOffer, EMERALD_1x, EMPTY, LAPIS_LAZULI_2x);
+				hasNiceLapis |= flg;
 				if (tradeOffer.isDisabled())
 				{
 					continue;
 				}
-				if (isLapis)
+				if (hasNiceLapis)
 				{
 					lapisLazuliIdx = i;
 				}
@@ -102,17 +108,17 @@ public class TradingHelper
 			{
 				this.prepareTrade(lapisLazuliIdx, true);
 			}
-			else if (rottenFreshIdx != -1 && !hasLapis)
+			else if (!hasLapis && rottenFreshIdx != -1)
 			{
 				this.prepareTrade(rottenFreshIdx, false);
 			}
-			else if (redstoneIdx != -1)
+			else if (hasNiceLapis && redstoneIdx != -1)
 			{
 				this.prepareTrade(redstoneIdx, false);
 			}
-			else
+			else if (hasRottenFresh || (this.merchantScreen.getTitle() instanceof TranslatableText && ((TranslatableText)this.merchantScreen.getTitle()).getKey().equals("entity.minecraft.villager.cleric")))
 			{
-				InfoUtils.printActionbarMessage("It's useless now, unless it resets");
+				InfoUtils.printActionbarMessage("%1$s is useless now, unless it resets", this.merchantScreen.getTitle());
 				closeContainer();
 			}
 		}
@@ -290,22 +296,23 @@ public class TradingHelper
 			return -1;
 		}
 		int remaining = stack.getCount();
+		int counter = 0;
 		for (int i = this.container.slots.size() - 36; i < this.container.slots.size(); i++)
 		{
 			ItemStack invstack = this.container.getSlot(i).getStack();
 			boolean needPutBack = false;
 			if (areItemStacksMergable(stack, invstack))
 			{
-				if (stack.getCount() + invstack.getCount() > stack.getMaxCount())
-					needPutBack = true;
 				remaining -= invstack.getCount();
+				counter += invstack.getCount();
+				needPutBack = counter > stack.getMaxCount();
 				System.out.println("[fillSlot] taking "+invstack.getCount()+" items from slot # "+i+", remaining is now "+remaining);
 				slotClick(i);
 				slotClick(slot);
 			}
 			if (needPutBack)
 			{
-			//	slotClick(i);
+				slotClick(i);
 			}
 			if (remaining <= 0)
 				return remaining < 0 ? i : -1;
