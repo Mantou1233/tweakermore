@@ -25,5 +25,8 @@
   "tweakmAutoFillContainer.best_slot_not_found": "未找到最适合装填容器的物品",
 
   "tweakmTradyLapis": "tweakmTradyLapis | Trady青金石交易",
-  "tweakmTradyLapis.comment": "[TIS] 1.13牧师青金石交易助手\n1. 1x腐肉解锁青金石交易\n2. 当青金石交易为1->2时进行交易"
+  "tweakmTradyLapis.comment": "[TIS] 1.13牧师青金石交易助手\n1. 1x腐肉解锁青金石交易\n2. 当青金石交易为1->2时进行交易\n3. 当青金石交易上锁且没交易过红石粉时，交易一次红石粉",
+
+  "tweakmTradyFarmer": "tweakmTradyFarmer | Trady农民交易",
+  "tweakmTradyFarmer.comment": "[TIS] 1.13农民交易助手\n交易出售所有除了小麦外的农作物"
 }

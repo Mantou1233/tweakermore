@@ -14,6 +14,7 @@ public class TogglesEarlyRiser implements Runnable
 				addEnum("TWEAKM_AUTO_CLEAN_CONTAINER", "tweakmAutoCleanContainer", false, "", "tweakmAutoCleanContainer.comment", "Auto Clean Container").
 				addEnum("TWEAKM_AUTO_FILL_CONTAINER", "tweakmAutoFillContainer", false, "", "tweakmAutoFillContainer.comment", "Auto Fill Container").
 				addEnum("TWEAKM_TRADY_LAPIS", "tweakmTradyLapis", false, "", "tweakmTradyLapis.comment", "[TIS] 1.13 cleric lapis trading helper").
+				addEnum("TWEAKM_TRADY_FARMER", "tweakmTradyFarmer", false, "", "tweakmTradyFarmer.comment", "[TIS] 1.13 farmer trading helper").
 				build();
 	}
 }

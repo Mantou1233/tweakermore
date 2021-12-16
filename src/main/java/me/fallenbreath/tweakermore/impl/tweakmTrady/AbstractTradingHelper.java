@@ -1,7 +1,6 @@
 package me.fallenbreath.tweakermore.impl.tweakmTrady;
 
 import fi.dy.masa.malilib.util.InfoUtils;
-import me.fallenbreath.tweakermore.config.TweakerMoreToggles;
 import me.fallenbreath.tweakermore.mixins.tweaks.tweakmTradyLapis.ContainerScreenAccessor;
 import me.fallenbreath.tweakermore.mixins.tweaks.tweakmTradyLapis.MerchantScreenAccessor;
 import net.minecraft.client.MinecraftClient;
@@ -12,38 +11,61 @@ import net.minecraft.container.SlotActionType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.text.BaseText;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.village.TradeOffer;
-import net.minecraft.village.TraderOfferList;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-public class TradingHelper
+public abstract class AbstractTradingHelper
 {
-	private final MerchantScreen merchantScreen;
-	private final MerchantContainer container;
+	protected final MerchantScreen merchantScreen;
+	protected final MerchantContainer container;
 	@Nullable
-	private TradeInfo tradeInfo;
+	protected TradeInfo tradeInfo;
 
-	public TradingHelper(MerchantScreen merchantScreen)
+	protected static final Item EMERALD = Items.EMERALD;
+	protected static final ItemStack EMERALD_1x = new ItemStack(Items.EMERALD, 1);
+	protected static final ItemStack EMPTY = ItemStack.EMPTY;
+
+	public AbstractTradingHelper(MerchantScreen merchantScreen)
 	{
 		this.merchantScreen = merchantScreen;
 		this.container = merchantScreen.getContainer();
 	}
+
+	public abstract boolean isEnabled();
 
 	public int getContainerId()
 	{
 		return this.container.syncId;
 	}
 
-	private static final ItemStack EMERALD_1x = new ItemStack(Items.EMERALD, 1);
-	private static final ItemStack LAPIS_LAZULI_2x = new ItemStack(Items.LAPIS_LAZULI, 2);
-	private static final ItemStack EMPTY = ItemStack.EMPTY;
+	protected boolean testProfession(String villagerNameKey)
+	{
+		return this.merchantScreen.getTitle() instanceof TranslatableText && ((TranslatableText)this.merchantScreen.getTitle()).getKey().equals(villagerNameKey);
+	}
 
-	private static boolean offerMatches(TradeOffer offer, Object buy1, Object buy2, Object sell)
+	private static BaseText formatOffer(TradeOffer offer)
+	{
+		LiteralText msg = new LiteralText("");
+		Consumer<ItemStack> appender = itemStack -> msg.append(itemStack.getName()).append("x" + itemStack.getCount());
+		appender.accept(offer.getAdjustedFirstBuyItem());
+		if (!offer.getSecondBuyItem().isEmpty())
+		{
+			msg.append(" + ");
+			appender.accept(offer.getSecondBuyItem());
+		}
+		msg.append(" -> ");
+		appender.accept(offer.getSellItem());
+		return msg;
+	}
+
+	protected static boolean offerMatches(TradeOffer offer, Object buy1, Object buy2, Object sell)
 	{
 		BiFunction<Object, ItemStack, Boolean> tester = (current, excepted) ->
 		{
@@ -69,62 +91,9 @@ public class TradingHelper
 		return tester.apply(buy1, offer.getAdjustedFirstBuyItem()) && tester.apply(buy2, offer.getSecondBuyItem()) && tester.apply(sell, offer.getSellItem());
 	}
 
-	public void process()
-	{
-		if (TweakerMoreToggles.TWEAKM_TRADY_LAPIS.getBooleanValue())
-		{
-			TraderOfferList traderOfferList = this.container.getRecipes();
-			int rottenFreshIdx = -1;
-			int lapisLazuliIdx = -1;
-			int redstoneIdx = -1;
-			boolean hasRottenFresh = false;
-			boolean hasLapis = false;
-			boolean hasNiceLapis = false;
-			for (int i = 0; i < traderOfferList.size(); i++)
-			{
-				TradeOffer tradeOffer = traderOfferList.get(i);
-				hasLapis |= offerMatches(tradeOffer, EMERALD_1x, EMPTY, Items.LAPIS_LAZULI);
-				hasRottenFresh |= offerMatches(tradeOffer, Items.ROTTEN_FLESH, EMPTY, EMERALD_1x);
-				boolean flg = offerMatches(tradeOffer, EMERALD_1x, EMPTY, LAPIS_LAZULI_2x);
-				hasNiceLapis |= flg;
-				if (tradeOffer.isDisabled())
-				{
-					continue;
-				}
-				if (hasNiceLapis)
-				{
-					lapisLazuliIdx = i;
-				}
-				if (offerMatches(tradeOffer, EMERALD_1x, EMPTY, Items.REDSTONE) && tradeOffer.getUses() == 0)
-				{
-					redstoneIdx = i;
-				}
-				if (offerMatches(tradeOffer, Items.ROTTEN_FLESH, EMPTY, EMERALD_1x) && tradeOffer.getUses() == 0)
-				{
-					rottenFreshIdx = i;
-				}
-			}
-			if (lapisLazuliIdx != -1)
-			{
-				this.prepareTrade(lapisLazuliIdx, true);
-			}
-			else if (!hasLapis && rottenFreshIdx != -1)
-			{
-				this.prepareTrade(rottenFreshIdx, false);
-			}
-			else if (hasNiceLapis && redstoneIdx != -1)
-			{
-				this.prepareTrade(redstoneIdx, false);
-			}
-			else if (hasRottenFresh || (this.merchantScreen.getTitle() instanceof TranslatableText && ((TranslatableText)this.merchantScreen.getTitle()).getKey().equals("entity.minecraft.villager.cleric")))
-			{
-				InfoUtils.printActionbarMessage("%1$s is useless now, unless it resets", this.merchantScreen.getTitle());
-				closeContainer();
-			}
-		}
-	}
+	public abstract void checkOffer();
 
-	private void closeContainer()
+	protected void closeContainer()
 	{
 		ClientPlayerEntity player = MinecraftClient.getInstance().player;
 		if (player != null)
@@ -133,7 +102,7 @@ public class TradingHelper
 		}
 	}
 
-	private void prepareTrade(int offerIndex, boolean tradeAll)
+	protected void prepareTrade(int offerIndex, boolean tradeAll)
 	{
 		// select slot
 		((MerchantScreenAccessor)this.merchantScreen).setSelectedIndex(offerIndex);
@@ -143,6 +112,7 @@ public class TradingHelper
 		// so we will do the trade when the inventory packet is received
 		// https://github.com/ViaVersion/ViaVersion/blob/4074352a531cfb0de6fa81e043ee761737748a7a/common/src/main/java/com/viaversion/viaversion/protocols/protocol1_14to1_13_2/packets/InventoryPackets.java#L238
 		this.tradeInfo = new TradeInfo(offerIndex, tradeAll);
+		System.out.println("Choosing offer #" + offerIndex);
 	}
 
 	public void doTrade()
@@ -153,12 +123,13 @@ public class TradingHelper
 		}
 		TradeOffer offer = this.container.getRecipes().get(this.tradeInfo.offerIndex);
 		int counter = 0;
-		while (counter++ < 100)
+		while (counter < 100)
 		{
-			if (!canTrade(offer, counter == 1))
+			if (!canTrade(offer, counter == 0))
 			{
 				break;
 			}
+			counter++;
 			System.out.println("trade try #" + counter);
 			this.transact(offer);
 
@@ -167,13 +138,18 @@ public class TradingHelper
 				break;
 			}
 		}
+		if (counter > 0)
+		{
+			InfoUtils.printActionbarMessage("Traded [%1$s] for %2$s times", formatOffer(offer), counter);
+		}
+		closeContainer();
 	}
 
 	//////////////////////////////
 	//  Trading Implementation  //
 	//////////////////////////////
 
-	private boolean canTrade(TradeOffer offer, boolean doLog)
+	protected boolean canTrade(TradeOffer offer, boolean doLog)
 	{
 		Consumer<String> log = msg -> {
 			if (doLog)
@@ -384,17 +360,5 @@ public class TradingHelper
 	{
 		System.out.println("slotClick "+slot);
 		((ContainerScreenAccessor)this.merchantScreen).invokeOnMouseClick(null, slot, 0, SlotActionType.PICKUP);
-	}
-
-	private static class TradeInfo
-	{
-		public final int offerIndex;
-		public final boolean tradeAll;
-
-		private TradeInfo(int offerIndex, boolean tradeAll)
-		{
-			this.offerIndex = offerIndex;
-			this.tradeAll = tradeAll;
-		}
 	}
 }
