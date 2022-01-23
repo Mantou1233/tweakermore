@@ -23,6 +23,7 @@
     "tweaks.tweakmTradyLapis.MerchantContainerMixin",
     "tweaks.tweakmTradyLapis.MerchantScreenAccessor",
     "tweaks.tweakmTradyLapis.MerchantScreenMixin",
+    "tweaks.tweakmPickBlockLastContinuously.PlacementTweaksMixin",
     "tweaks.villagerOfferUsesDisplay.MerchantScreenAccessor",
     "tweaks.villagerOfferUsesDisplay.MerchantScreenWidgetButtonPageMixin"
   ],

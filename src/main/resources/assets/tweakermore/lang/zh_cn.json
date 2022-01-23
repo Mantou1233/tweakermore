@@ -31,4 +31,8 @@
 
   "tweakmTradyFarmer": "tweakmTradyFarmer | Trady农民交易",
   "tweakmTradyFarmer.comment": "[TIS] 1.13农民交易助手\n交易出售所有除了小麦外的农作物"
+  "tweakmAutoFillContainer.best_slot_not_found": "未找到最适合装填容器的物品",
+
+  "tweakmAutoPickSchematicBlock": "tweakmAutoPickSchematicBlock | 自动选择原理图方块",
+  "tweakmAutoPickSchematicBlock.comment": "在放置方块前自动选择原理图中的方块对应的物品\n逻辑同litematica mod的pickBlock功能，你需要在litematica mod中启用pickBlockEnabled选项\n在轻松放置开启时无效"
 }
