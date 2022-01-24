@@ -30,8 +30,7 @@
   "tweakmTradyLapis.comment": "[TIS] 1.13 cleric lapis trading helper\n1. Trade 1x rotten fresh to unlock lapis\n2. Trade lapis if lapis trade is 1->2\n3. Trade 1x redstone dust if lapis trade locks and never trades redstone",
 
   "tweakmTradyFarmer": "tweakmTradyFarmer",
-  "tweakmTradyFarmer.comment": "[TIS] 1.13 farmer trading helper\nTrade and sell all crops except wheat"
-  "tweakmAutoFillContainer.best_slot_not_found": "Most suitable item to fill the container not found",
+  "tweakmTradyFarmer.comment": "[TIS] 1.13 farmer trading helper\nTrade and sell all crops except wheat",
 
   "tweakmAutoPickSchematicBlock": "tweakmAutoPickSchematicBlock",
   "tweakmAutoPickSchematicBlock.comment": "Pick block from schematic automatically before block placement\nIt's logic is the same as the pickBlock tweaks in litematica mod, you need to enable pickBlockEnabled option in litematica\nDoes not work with easy place mode"
