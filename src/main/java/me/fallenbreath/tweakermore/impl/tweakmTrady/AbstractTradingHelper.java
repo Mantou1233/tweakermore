@@ -38,12 +38,23 @@ public abstract class AbstractTradingHelper
 		this.container = merchantScreen.getContainer();
 	}
 
-	public abstract boolean isEnabled();
+	///////////////
+	//  Getters  //
+	///////////////
 
 	public int getContainerId()
 	{
 		return this.container.syncId;
 	}
+
+	public boolean hasPendingTrade()
+	{
+		return this.tradeInfo != null;
+	}
+
+	/////////////
+	//  Utils  //
+	/////////////
 
 	protected boolean testProfession(String villagerNameKey)
 	{
@@ -91,8 +102,6 @@ public abstract class AbstractTradingHelper
 		return tester.apply(buy1, offer.getAdjustedFirstBuyItem()) && tester.apply(buy2, offer.getSecondBuyItem()) && tester.apply(sell, offer.getSellItem());
 	}
 
-	public abstract void checkOffer();
-
 	protected void closeContainer()
 	{
 		ClientPlayerEntity player = MinecraftClient.getInstance().player;
@@ -101,6 +110,20 @@ public abstract class AbstractTradingHelper
 			player.closeContainer();
 		}
 	}
+
+	/////////////////////////
+	//  To Be Implemented  //
+	/////////////////////////
+
+	protected abstract boolean shouldCloseContainerAfterTrade();
+
+	public abstract boolean isEnabled();
+
+	public abstract void checkOffer();
+
+	/////////////////
+	//  Interfaces //
+	/////////////////
 
 	protected void prepareTrade(int offerIndex, boolean tradeAll)
 	{
@@ -115,11 +138,11 @@ public abstract class AbstractTradingHelper
 		System.out.println("Choosing offer #" + offerIndex);
 	}
 
-	public void doTrade()
+	public int doTrade()
 	{
 		if (this.tradeInfo == null)
 		{
-			return;
+			return 0;
 		}
 		TradeOffer offer = this.container.getRecipes().get(this.tradeInfo.offerIndex);
 		int counter = 0;
@@ -142,7 +165,12 @@ public abstract class AbstractTradingHelper
 		{
 			InfoUtils.printActionbarMessage("Traded [%1$s] for %2$s times", formatOffer(offer), counter);
 		}
-		closeContainer();
+		this.tradeInfo = null;
+		if (this.shouldCloseContainerAfterTrade())
+		{
+			closeContainer();
+		}
+		return counter;
 	}
 
 	//////////////////////////////

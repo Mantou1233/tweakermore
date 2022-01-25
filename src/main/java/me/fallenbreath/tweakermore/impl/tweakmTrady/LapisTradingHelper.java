@@ -24,6 +24,12 @@ public class LapisTradingHelper extends AbstractTradingHelper
 	}
 
 	@Override
+	protected boolean shouldCloseContainerAfterTrade()
+	{
+		return true;
+	}
+
+	@Override
 	public void checkOffer()
 	{
 		TraderOfferList traderOfferList = this.container.getRecipes();
@@ -78,7 +84,7 @@ public class LapisTradingHelper extends AbstractTradingHelper
 		}
 		else
 		{
-			InfoUtils.printActionbarMessage("%1$s is useless now" + (reason != null ? ", reason: " + reason : ""), this.merchantScreen.getTitle());
+			InfoUtils.printActionbarMessage("[Trady Lapis] %1$s is useless now" + (reason != null ? ", reason: " + reason : ""), this.merchantScreen.getTitle());
 			closeContainer();
 		}
 	}

@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Mixin(ClientPlayNetworkHandler.class)
 public abstract class ClientPlayNetworkHandlerMixin
@@ -44,6 +45,7 @@ public abstract class ClientPlayNetworkHandlerMixin
 	private void onInitTradeOffer(SetTradeOffersS2CPacket packet, CallbackInfo ci, Container container)
 	{
 		MerchantScreen merchantScreen = ((TradyMerchantContainer) container).getMerchantScreen();
+		this.tradingHelpers.clear();
 		tradingHelperConstructors.forEach(ctr -> {
 			AbstractTradingHelper tradingHelper = ctr.apply(merchantScreen);
 			if (tradingHelper.isEnabled())
@@ -64,12 +66,13 @@ public abstract class ClientPlayNetworkHandlerMixin
 	)
 	private void timeForTrady(InventoryS2CPacket packet, CallbackInfo ci)
 	{
-		this.tradingHelpers.forEach(tradingHelper -> {
-			if (tradingHelper.getContainerId() == packet.getGuiId())
-			{
-				tradingHelper.doTrade();
-			}
-		});
-		this.tradingHelpers.clear();
+		if (!this.tradingHelpers.isEmpty())
+		{
+			List<AbstractTradingHelper> toRemove = this.tradingHelpers.stream().
+					filter(helper -> helper.getContainerId() != packet.getGuiId() || !helper.hasPendingTrade()).
+					collect(Collectors.toList());
+			this.tradingHelpers.removeAll(toRemove);
+			this.tradingHelpers.forEach(AbstractTradingHelper::doTrade);
+		}
 	}
 }
