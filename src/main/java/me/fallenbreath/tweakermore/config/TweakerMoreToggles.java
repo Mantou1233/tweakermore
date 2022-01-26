@@ -12,9 +12,10 @@ public class TweakerMoreToggles
 
 	public static final FeatureToggle TWEAKM_AUTO_CLEAN_CONTAINER = fetch("TWEAKM_AUTO_CLEAN_CONTAINER");
 	public static final FeatureToggle TWEAKM_AUTO_FILL_CONTAINER = fetch("TWEAKM_AUTO_FILL_CONTAINER");
+	public static final FeatureToggle TWEAKM_AUTO_PICK_SCHEMATIC_BLOCK = fetch("TWEAKM_AUTO_PICK_SCHEMATIC_BLOCK");
+
 	public static final FeatureToggle TWEAKM_TRADY_LAPIS = fetch("TWEAKM_TRADY_LAPIS");
 	public static final FeatureToggle TWEAKM_TRADY_FARMER = fetch("TWEAKM_TRADY_FARMER");
-	public static final FeatureToggle TWEAKM_AUTO_PICK_SCHEMATIC_BLOCK = fetch("TWEAKM_AUTO_PICK_SCHEMATIC_BLOCK");
 
 	public static List<FeatureToggle> getFeatureToggles()
 	{

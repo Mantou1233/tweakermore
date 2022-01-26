@@ -1,6 +1,8 @@
 package me.fallenbreath.tweakermore.impl.tweakmTrady;
 
 import fi.dy.masa.malilib.util.InfoUtils;
+import it.unimi.dsi.fastutil.ints.IntArraySet;
+import me.fallenbreath.tweakermore.config.TweakerMoreConfigs;
 import me.fallenbreath.tweakermore.mixins.tweaks.tweakmTradyLapis.ContainerScreenAccessor;
 import me.fallenbreath.tweakermore.mixins.tweaks.tweakmTradyLapis.MerchantScreenAccessor;
 import net.minecraft.client.MinecraftClient;
@@ -135,7 +137,7 @@ public abstract class AbstractTradingHelper
 		// so we will do the trade when the inventory packet is received
 		// https://github.com/ViaVersion/ViaVersion/blob/4074352a531cfb0de6fa81e043ee761737748a7a/common/src/main/java/com/viaversion/viaversion/protocols/protocol1_14to1_13_2/packets/InventoryPackets.java#L238
 		this.tradeInfo = new TradeInfo(offerIndex, tradeAll);
-		System.out.println("Choosing offer #" + offerIndex);
+//		System.out.println("Choosing offer #" + offerIndex);
 	}
 
 	public int doTrade()
@@ -153,7 +155,7 @@ public abstract class AbstractTradingHelper
 				break;
 			}
 			counter++;
-			System.out.println("trade try #" + counter);
+//			System.out.println("trade try #" + counter);
 			this.transact(offer);
 
 			if (!this.tradeInfo.tradeAll)
@@ -205,7 +207,7 @@ public abstract class AbstractTradingHelper
 			log.accept("Not enough money " + offer.getSecondBuyItem());
 			return false;
 		}
-		if (!canReceiveOutput(offer.getSellItem()))
+		if (!canReceiveOutput(offer.getSellItem()) && !TweakerMoreConfigs.TRADY_THROW_IF_FULL.getBooleanValue())
 		{
 			log.accept("Not enough space for output");
 			return false;
@@ -234,7 +236,7 @@ public abstract class AbstractTradingHelper
 				continue;
 			if (areItemStacksMergable(stack, invstack))
 			{
-				System.out.println("[hasEnough] taking "+invstack.getCount()+" items from slot # "+i);
+//				System.out.println("[hasEnough] taking "+invstack.getCount()+" items from slot # "+i);
 				remaining -= invstack.getCount();
 			}
 			if (remaining <= 0)
@@ -251,13 +253,13 @@ public abstract class AbstractTradingHelper
 			ItemStack invstack = this.container.getSlot(i).getStack();
 			if (invstack == null || invstack.isEmpty())
 			{
-				System.out.println("can put result into empty slot "+i);
+//				System.out.println("can put result into empty slot "+i);
 				return true;
 			}
 			if (areItemStacksMergable(stack, invstack)
 					&& stack.getMaxCount() >= stack.getCount() + invstack.getCount())
 			{
-				System.out.println("Can merge "+(invstack.getMaxCount()-invstack.getCount())+" items with slot "+i);
+//				System.out.println("Can merge "+(invstack.getMaxCount()-invstack.getCount())+" items with slot "+i);
 				remaining -= (invstack.getMaxCount() - invstack.getCount());
 			}
 			if (remaining <= 0)
@@ -268,13 +270,13 @@ public abstract class AbstractTradingHelper
 
 	private void transact(TradeOffer offer)
 	{
-		System.out.println("fill input slots called");
+//		System.out.println("fill input slots called");
 		int putback0, putback1 = -1;
 		putback0 = fillSlot(0, offer.getAdjustedFirstBuyItem());
 		putback1 = fillSlot(1, offer.getSecondBuyItem());
 
-		getslot(2, offer.getSellItem(), putback0, putback1);
-		System.out.println("putting back to slot "+putback0+" from 0, and to "+putback1+"from 1");
+		moveToInventory(2, offer.getSellItem(), putback0, putback1);
+//		System.out.println("putting back to slot "+putback0+" from 0, and to "+putback1+"from 1");
 		if (putback0 != -1)
 		{
 			slotClick(0);
@@ -310,7 +312,7 @@ public abstract class AbstractTradingHelper
 				remaining -= invstack.getCount();
 				counter += invstack.getCount();
 				needPutBack = counter > stack.getMaxCount();
-				System.out.println("[fillSlot] taking "+invstack.getCount()+" items from slot # "+i+", remaining is now "+remaining);
+//				System.out.println("[fillSlot] taking "+invstack.getCount()+" items from slot # "+i+", remaining is now "+remaining);
 				slotClick(i);
 				slotClick(slot);
 			}
@@ -337,7 +339,9 @@ public abstract class AbstractTradingHelper
 		return false;
 	}
 
-	private void getslot(int slot, ItemStack stack, int... forbidden)
+	private static final int SLOT_TO_THROW = -999;
+
+	private void moveToInventory(int slot, ItemStack stack, int... forbidden)
 	{
 		int remaining = stack.getCount();
 		slotClick(slot);
@@ -352,7 +356,7 @@ public abstract class AbstractTradingHelper
 					&& invstack.getCount() < invstack.getMaxCount()
 			)
 			{
-				System.out.println("Can merge "+(invstack.getMaxCount()-invstack.getCount())+" items with slot "+i);
+//				System.out.println("Can merge "+(invstack.getMaxCount()-invstack.getCount())+" items with slot "+i);
 				remaining -= (invstack.getMaxCount() - invstack.getCount());
 				slotClick(i);
 			}
@@ -360,33 +364,27 @@ public abstract class AbstractTradingHelper
 				return;
 		}
 
+		IntArraySet forbiddenSlots = new IntArraySet(forbidden);
 		// When looking for an empty slot, don't take one that we want to put some input back to.
 		for (int i = this.container.slots.size() - 36; i < this.container.slots.size(); i++)
 		{
-			boolean isForbidden = false;
-			for (int f : forbidden)
-			{
-				if (i == f)
-				{
-					isForbidden = true;
-					break;
-				}
-			}
-			if (isForbidden)
-				continue;
+			if (forbiddenSlots.contains(i)) continue;
 			ItemStack invstack = this.container.getSlot(i).getStack();
 			if (invstack == null || invstack.isEmpty())
 			{
 				slotClick(i);
-				System.out.println("putting result into empty slot "+i);
+//				System.out.println("putting result into empty slot "+i);
 				return;
 			}
 		}
+
+		// no empty place to put back, throw it
+		slotClick(SLOT_TO_THROW);
 	}
 
 	private void slotClick(int slot)
 	{
-		System.out.println("slotClick "+slot);
-		((ContainerScreenAccessor)this.merchantScreen).invokeOnMouseClick(null, slot, 0, SlotActionType.PICKUP);
+//		System.out.println("slotClick "+slot);
+		((ContainerScreenAccessor)this.merchantScreen).invokeOnMouseClick(null, slot, 0, slot != SLOT_TO_THROW ? SlotActionType.PICKUP : SlotActionType.THROW);
 	}
 }

@@ -50,6 +50,10 @@ public class TweakerMoreConfigs
 	@Config(Config.Type.DISABLE)
 	public static final ConfigBooleanHotkeyed DISABLE_REDSTONE_WIRE_PARTICLE = new ConfigBooleanHotkeyed("disableRedstoneWireParticle", false, "", "disableRedstoneWireParticle.comment", "Disable particle of redstone wire");
 
+	// trady
+	@Config(Config.Type.GENERIC)
+	public static final ConfigBoolean TRADY_THROW_IF_FULL = new ConfigBoolean("tradyThrowIfFull", false, "tradyThrowIfFull.comment");
+
 	private static String getItemId(Item item)
 	{
 		return Registry.ITEM.getId(item).toString();

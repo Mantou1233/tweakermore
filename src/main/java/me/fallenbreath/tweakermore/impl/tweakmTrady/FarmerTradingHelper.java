@@ -18,7 +18,7 @@ public class FarmerTradingHelper extends AbstractTradingHelper
 {
 	private static final List<Item> TARGET_ITEMS = ImmutableList.of(Items.CARROT, Items.POTATO, Items.PUMPKIN, Items.MELON);
 	private Item itemThisTrade;
-	private List<Item> tradedGoods = Lists.newArrayList();
+	private final List<Item> tradedGoods = Lists.newArrayList();
 
 	public FarmerTradingHelper(MerchantScreen merchantScreen)
 	{
