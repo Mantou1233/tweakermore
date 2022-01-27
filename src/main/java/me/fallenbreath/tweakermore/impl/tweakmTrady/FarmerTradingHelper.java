@@ -1,22 +1,26 @@
 package me.fallenbreath.tweakermore.impl.tweakmTrady;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import fi.dy.masa.malilib.util.InfoUtils;
+import me.fallenbreath.tweakermore.config.TweakerMoreConfigs;
 import me.fallenbreath.tweakermore.config.TweakerMoreToggles;
 import net.minecraft.client.gui.screen.ingame.MerchantScreen;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TraderOfferList;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class FarmerTradingHelper extends AbstractTradingHelper
 {
-	private static final List<Item> TARGET_ITEMS = ImmutableList.of(Items.CARROT, Items.POTATO, Items.PUMPKIN, Items.MELON);
 	private Item itemThisTrade;
 	private final List<Item> tradedGoods = Lists.newArrayList();
 
@@ -31,29 +35,31 @@ public class FarmerTradingHelper extends AbstractTradingHelper
 		return TweakerMoreToggles.TWEAKM_TRADY_FARMER.getBooleanValue() && (this.testProfession("entity.minecraft.villager.farmer") || this.container.getRecipes().size() >= 1 && this.container.getRecipes().get(0).getAdjustedFirstBuyItem().getItem() == Items.WHEAT);
 	}
 
-	@Override
-	public void checkOffer()
+	private boolean findOffer(Predicate<TradeOffer> offerPredicate)
 	{
 		TraderOfferList traderOfferList = this.container.getRecipes();
 		for (int i = 0; i < traderOfferList.size(); i++)
 		{
 			TradeOffer tradeOffer = traderOfferList.get(i);
-			if (tradeOffer.isDisabled())
+			if (!tradeOffer.isDisabled() && offerPredicate.test(tradeOffer) && this.canTrade(tradeOffer, false))
 			{
-				continue;
+				this.prepareTrade(i, true);
+				return true;
 			}
-			for (Item item : TARGET_ITEMS)
-			{
-				if (offerMatches(tradeOffer, item, EMPTY, EMERALD))
-				{
-					if (this.canTrade(tradeOffer, false))
-					{
-						this.prepareTrade(i, true);
-						return;
-					}
-					break;
-				}
-			}
+		}
+		return false;
+	}
+
+	@Override
+	public void checkOffer()
+	{
+		List<Item> targetItems = TweakerMoreConfigs.TRADY_FARMER_TARGETS.getStrings().stream().
+			map(itemId -> Registry.ITEM.getOrEmpty(new Identifier(itemId)).orElse(null)).
+			filter(Objects::nonNull).
+			collect(Collectors.toList());
+		if (this.findOffer(offer -> targetItems.stream().anyMatch(item -> offerMatches(offer, item, EMPTY, EMERALD))))
+		{
+			return;
 		}
 		if (this.tradedGoods.isEmpty())
 		{
@@ -77,7 +83,12 @@ public class FarmerTradingHelper extends AbstractTradingHelper
 	protected void prepareTrade(int offerIndex, boolean tradeAll)
 	{
 		super.prepareTrade(offerIndex, tradeAll);
-		this.itemThisTrade = this.container.getRecipes().get(offerIndex).getAdjustedFirstBuyItem().getItem();
+		TradeOffer tradeOffer = this.container.getRecipes().get(offerIndex);
+		this.itemThisTrade = tradeOffer.getAdjustedFirstBuyItem().getItem();
+		if (this.itemThisTrade == Items.EMERALD)  // buying
+		{
+			this.itemThisTrade = tradeOffer.getSellItem().getItem();
+		}
 	}
 
 	@Override

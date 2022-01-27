@@ -385,6 +385,6 @@ public abstract class AbstractTradingHelper
 	private void slotClick(int slot)
 	{
 //		System.out.println("slotClick "+slot);
-		((ContainerScreenAccessor)this.merchantScreen).invokeOnMouseClick(null, slot, 0, slot != SLOT_TO_THROW ? SlotActionType.PICKUP : SlotActionType.THROW);
+		((ContainerScreenAccessor)this.merchantScreen).invokeOnMouseClick(null, slot, 0, SlotActionType.PICKUP);
 	}
 }

@@ -34,10 +34,12 @@
 
   "============ Trady ============": "dividing line",
 
+  "tradyThrowIfFull": "tradyThrowIfFull",
+  "tradyThrowIfFull.comment": "Throw the output item out if the inventory is full instead of cancelling the attempt when using trading helper",
   "tweakmTradyLapis": "tweakmTradyLapis",
   "tweakmTradyLapis.comment": "[TIS] 1.13 cleric lapis trading helper\n1. Trade 1x rotten fresh to unlock lapis\n2. Trade lapis if lapis trade is 1->2\n3. Trade 1x redstone dust if lapis trade locks and never trades redstone",
   "tweakmTradyFarmer": "tweakmTradyFarmer",
-  "tweakmTradyFarmer.comment": "[TIS] 1.13 farmer trading helper\nTrade and sell all crops except wheat",
-  "tradyThrowIfFull": "tradyThrowIfFull",
-  "tradyThrowIfFull.comment": "Throw the output item out if the inventory is full instead of cancelling the attempt when using trading helper"
+  "tweakmTradyFarmer.comment": "[TIS] 1.13 farmer trading helper\nTrade and sell all crops except wheat and melon\nItems to trade can be modified in list options tradyFarmerTargets",
+  "tradyFarmerTargets": "tradyFarmerTargets",
+  "tradyFarmerTargets.comment": "Crop items to be sold for emerald with farmer trading helper"
 }

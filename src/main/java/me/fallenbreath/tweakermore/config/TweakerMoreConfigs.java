@@ -53,6 +53,8 @@ public class TweakerMoreConfigs
 	// trady
 	@Config(Config.Type.GENERIC)
 	public static final ConfigBoolean TRADY_THROW_IF_FULL = new ConfigBoolean("tradyThrowIfFull", false, "tradyThrowIfFull.comment");
+	@Config(Config.Type.LIST)
+	public static final ConfigStringList TRADY_FARMER_TARGETS = new ConfigStringList("tradyFarmerTargets", ImmutableList.of(getItemId(Items.CARROT), getItemId(Items.POTATO), getItemId(Items.PUMPKIN)), "tradyFarmerTargets.comment");
 
 	private static String getItemId(Item item)
 	{
