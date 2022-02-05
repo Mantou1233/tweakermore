@@ -1,4 +1,4 @@
-package me.fallenbreath.tweakermore.config.early_risers;
+package me.fallenbreath.tweakermore.config;
 
 import com.chocohead.mm.api.ClassTinkerers;
 
