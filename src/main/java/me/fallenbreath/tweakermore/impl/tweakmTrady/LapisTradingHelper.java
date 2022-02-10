@@ -1,7 +1,7 @@
 package me.fallenbreath.tweakermore.impl.tweakmTrady;
 
 import fi.dy.masa.malilib.util.InfoUtils;
-import me.fallenbreath.tweakermore.config.TweakerMoreToggles;
+import me.fallenbreath.tweakermore.config.TweakerMoreConfigs;
 import net.minecraft.client.gui.screen.ingame.MerchantScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -20,7 +20,7 @@ public class LapisTradingHelper extends AbstractTradingHelper
 	@Override
 	public boolean isEnabled()
 	{
-		return TweakerMoreToggles.TWEAKM_TRADY_LAPIS.getBooleanValue() && this.testProfession("entity.minecraft.villager.cleric");
+		return TweakerMoreConfigs.TWEAKM_TRADY_LAPIS.getBooleanValue() && this.testProfession("entity.minecraft.villager.cleric");
 	}
 
 	@Override

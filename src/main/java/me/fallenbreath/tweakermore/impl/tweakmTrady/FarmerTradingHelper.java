@@ -3,7 +3,6 @@ package me.fallenbreath.tweakermore.impl.tweakmTrady;
 import com.google.common.collect.Lists;
 import fi.dy.masa.malilib.util.InfoUtils;
 import me.fallenbreath.tweakermore.config.TweakerMoreConfigs;
-import me.fallenbreath.tweakermore.config.TweakerMoreToggles;
 import net.minecraft.client.gui.screen.ingame.MerchantScreen;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -32,7 +31,7 @@ public class FarmerTradingHelper extends AbstractTradingHelper
 	@Override
 	public boolean isEnabled()
 	{
-		return TweakerMoreToggles.TWEAKM_TRADY_FARMER.getBooleanValue() && (this.testProfession("entity.minecraft.villager.farmer") || this.container.getRecipes().size() >= 1 && this.container.getRecipes().get(0).getAdjustedFirstBuyItem().getItem() == Items.WHEAT);
+		return TweakerMoreConfigs.TWEAKM_TRADY_FARMER.getBooleanValue() && (this.testProfession("entity.minecraft.villager.farmer") || this.container.getRecipes().size() >= 1 && this.container.getRecipes().get(0).getAdjustedFirstBuyItem().getItem() == Items.WHEAT);
 	}
 
 	private boolean findOffer(Predicate<TradeOffer> offerPredicate)
