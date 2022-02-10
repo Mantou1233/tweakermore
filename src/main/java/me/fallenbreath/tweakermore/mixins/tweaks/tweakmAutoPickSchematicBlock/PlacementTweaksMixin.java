@@ -12,7 +12,10 @@ import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.LayerRange;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
-import me.fallenbreath.tweakermore.config.TweakerMoreToggles;
+import me.fallenbreath.tweakermore.config.TweakerMoreConfigs;
+import me.fallenbreath.tweakermore.util.ModIds;
+import me.fallenbreath.tweakermore.util.mixin.Condition;
+import me.fallenbreath.tweakermore.util.mixin.ModRequire;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
@@ -35,6 +38,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+@ModRequire(enableWhen = {@Condition(ModIds.tweakeroo), @Condition(ModIds.litematica)})
 @Mixin(PlacementTweaks.class)
 public abstract class PlacementTweaksMixin
 {
@@ -59,7 +63,7 @@ public abstract class PlacementTweaksMixin
 		{
 			if (DataManager.getToolMode() != ToolMode.REBUILD && !Configs.Generic.EASY_PLACE_MODE.getBooleanValue())
 			{
-				if (TweakerMoreToggles.TWEAKM_AUTO_PICK_SCHEMATIC_BLOCK.getBooleanValue() && EntityUtils.shouldPickBlock(mc.player))
+				if (TweakerMoreConfigs.TWEAKM_AUTO_PICK_SCHEMATIC_BLOCK.getBooleanValue() && EntityUtils.shouldPickBlock(mc.player))
 				{
 					BlockHitResult hitResult = new BlockHitResult(hitVec, sideIn, posIn, false);
 					ItemPlacementContext ctx = new ItemPlacementContext(new ItemUsageContext(player, hand, hitResult));

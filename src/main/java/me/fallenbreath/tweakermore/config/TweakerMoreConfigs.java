@@ -7,75 +7,106 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.IConfigBase;
+import fi.dy.masa.malilib.config.IConfigHandler;
 import fi.dy.masa.malilib.config.options.*;
-import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.JsonUtils;
 import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
 import fi.dy.masa.malilib.util.restrictions.UsageRestriction;
-import me.fallenbreath.tweakermore.TweakerMoreMod;
-import me.fallenbreath.tweakermore.gui.TweakermoreConfigGui;
-import me.fallenbreath.tweakermore.impl.copySignTextToClipBoard.SignTextCopier;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.item.Item;
+import me.fallenbreath.tweakermore.util.FileUtil;
+import me.fallenbreath.tweakermore.util.RegistryUtil;
 import net.minecraft.item.Items;
-import net.minecraft.util.Util;
-import net.minecraft.util.registry.Registry;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class TweakerMoreConfigs
+import static me.fallenbreath.tweakermore.config.ConfigFactory.*;
+import static me.fallenbreath.tweakermore.util.ModIds.*;
+
+public class TweakerMoreConfigs implements IConfigHandler
 {
+	/**
+	 * ============================
+	 *     Config Declarations
+	 * ============================
+	 */
+
+	////////////////////
+	//    MC Tweaks   //
+	////////////////////
+
 	@Config(Config.Type.GENERIC)
-	public static final ConfigInteger AUTO_FILL_CONTAINER_THRESHOLD = new ConfigInteger("autoFillContainerThreshold", 2, 1, 36, "autoFillContainerThreshold.comment");
+	public static final ConfigInteger AUTO_FILL_CONTAINER_THRESHOLD = newConfigInteger("autoFillContainerThreshold", 2, 1, 36);
 	@Config(Config.Type.GENERIC)
-	public static final ConfigDouble NETHER_PORTAL_SOUND_CHANCE = new ConfigDouble("netherPortalSoundChance", 0.01D, 0.0D, 0.01D, "netherPortalSoundChance.comment");
+	public static final ConfigDouble NETHER_PORTAL_SOUND_CHANCE = newConfigDouble("netherPortalSoundChance", 0.01D, 0.0D, 0.01D);
 	@Config(Config.Type.GENERIC)
-	public static final ConfigBoolean VILLAGER_OFFER_USES_DISPLAY = new ConfigBoolean("villagerOfferUsesDisplay", false, "villagerOfferUsesDisplay.comment");
+	public static final ConfigBoolean VILLAGER_OFFER_USES_DISPLAY = newConfigBoolean("villagerOfferUsesDisplay", false);
 	@Config(Config.Type.GENERIC)
-	public static final ConfigBoolean SHULKER_TOOLTIP_ENCHANTMENT_HINT = new ConfigBoolean("shulkerTooltipEnchantmentHint", false, "shulkerTooltipEnchantmentHint.comment");
+	public static final ConfigBoolean SHULKER_TOOLTIP_ENCHANTMENT_HINT = newConfigBoolean("shulkerTooltipEnchantmentHint", false);
+	@Config(Config.Type.GENERIC)
+	public static final ConfigInteger CHAT_MESSAGE_LIMIT = newConfigInteger("chatMessageLimit", 100, 100, 10000);
+	@Config(Config.Type.GENERIC)
+	public static final ConfigDouble SAFE_AFK_HEALTH_THRESHOLD = newConfigDouble("safeAfkHealthThreshold", 10, 0, 100);
 
 	@Config(Config.Type.HOTKEY)
-	public static final ConfigHotkey COPY_SIGN_TEXT_TO_CLIPBOARD = new ConfigHotkey("copySignTextToClipBoard", "", "copySignTextToClipBoard.comment");
+	public static final ConfigHotkey COPY_SIGN_TEXT_TO_CLIPBOARD = newConfigHotKey("copySignTextToClipBoard", "");
 
-	@Config(Config.Type.LIST)
-	public static final ConfigOptionList HAND_RESTORE_LIST_TYPE = new ConfigOptionList("handRestockListType", UsageRestriction.ListType.NONE, "handRestockListType.comment");
-	@Config(Config.Type.LIST)
-	public static final ConfigStringList HAND_RESTORE_WHITELIST = new ConfigStringList("handRestockWhiteList", ImmutableList.of(getItemId(Items.BUCKET)), "handRestockWhiteList.comment");
-	@Config(Config.Type.LIST)
-	public static final ConfigStringList HAND_RESTORE_BLACKLIST = new ConfigStringList("handRestockBlackList", ImmutableList.of(getItemId(Items.LAVA_BUCKET)), "handRestockBlackList.comment");
+	@Config(value = Config.Type.LIST, modRequire = tweakeroo)
+	public static final ConfigOptionList HAND_RESTORE_LIST_TYPE = newConfigOptionList("handRestockListType", UsageRestriction.ListType.NONE);
+	@Config(value = Config.Type.LIST, modRequire = tweakeroo)
+	public static final ConfigStringList HAND_RESTORE_WHITELIST = newConfigStringList("handRestockWhiteList", ImmutableList.of(RegistryUtil.getItemId(Items.BUCKET)));
+	@Config(value = Config.Type.LIST, modRequire = tweakeroo)
+	public static final ConfigStringList HAND_RESTORE_BLACKLIST = newConfigStringList("handRestockBlackList", ImmutableList.of(RegistryUtil.getItemId(Items.LAVA_BUCKET)));
 	public static final ItemRestriction HAND_RESTORE_RESTRICTION = new ItemRestriction();
+	@Config(Config.Type.LIST)
+	public static final ConfigStringList PRIORITIZED_COMMAND_SUGGESTIONS = newConfigStringList("prioritizedCommandSuggestions", ImmutableList.of());
+
+	@Config(value = Config.Type.TWEAK, modRequire = itemscroller)
+	public static final ConfigBooleanHotkeyed TWEAKM_AUTO_CLEAN_CONTAINER = newConfigBooleanHotkeyed("tweakmAutoCleanContainer");
+	@Config(value = Config.Type.TWEAK, modRequire = itemscroller)
+	public static final ConfigBooleanHotkeyed TWEAKM_AUTO_FILL_CONTAINER = newConfigBooleanHotkeyed("tweakmAutoFillContainer");
+	@Config(value = Config.Type.TWEAK, modRequire = {tweakeroo, litematica})
+	public static final ConfigBooleanHotkeyed TWEAKM_AUTO_PICK_SCHEMATIC_BLOCK = newConfigBooleanHotkeyed("tweakmAutoPickSchematicBlock");
+	@Config(Config.Type.TWEAK)
+	public static final ConfigBooleanHotkeyed TWEAKM_SAFE_AFK = newConfigBooleanHotkeyed("tweakmSafeAfk");
 
 	@Config(Config.Type.DISABLE)
-	public static final ConfigBooleanHotkeyed DISABLE_LIGHT_UPDATES = new ConfigBooleanHotkeyed("disableLightUpdates", false, "", "disableLightUpdates.comment", "Disable Light Updates");
+	public static final ConfigBooleanHotkeyed DISABLE_LIGHT_UPDATES = newConfigBooleanHotkeyed("disableLightUpdates");
 	@Config(Config.Type.DISABLE)
-	public static final ConfigBooleanHotkeyed DISABLE_REDSTONE_WIRE_PARTICLE = new ConfigBooleanHotkeyed("disableRedstoneWireParticle", false, "", "disableRedstoneWireParticle.comment", "Disable particle of redstone wire");
+	public static final ConfigBooleanHotkeyed DISABLE_REDSTONE_WIRE_PARTICLE = newConfigBooleanHotkeyed("disableRedstoneWireParticle");
 
-	@Config(Config.Type.CONFIG)
-	public static final ConfigHotkey OPEN_TWEAKERMORE_CONFIG_GUI = new ConfigHotkey("openTweakermoreConfigGui", "", "openTweakermoreConfigGui.comment");
+	////////////////////
+	//   Mod Tweaks   //
+	////////////////////
 
-	// trady
+	@Config(value = Config.Type.GENERIC, modRequire = optifine, category = Config.Category.MOD_TWEAKS)
+	public static final ConfigBoolean OF_UNLOCK_F3_FPS_LIMIT = newConfigBoolean("ofUnlockF3FpsLimit", false);
+
+	@Config(value = Config.Type.GENERIC, modRequire = xaero_worldmap, category = Config.Category.MOD_TWEAKS)
+	public static final ConfigBoolean XMAP_NO_SESSION_FINALIZATION_WAIT = newConfigBoolean("xmapNoSessionFinalizationWait", false);
+
+	////////////////////
+	//    TIS Trady   //
+	////////////////////
+
 	@Config(Config.Type.GENERIC)
 	public static final ConfigBoolean TRADY_THROW_IF_FULL = new ConfigBoolean("tradyThrowIfFull", false, "tradyThrowIfFull.comment");
 	@Config(Config.Type.LIST)
 	public static final ConfigStringList TRADY_FARMER_TARGETS = new ConfigStringList("tradyFarmerTargets", ImmutableList.of(getItemId(Items.CARROT), getItemId(Items.POTATO), getItemId(Items.PUMPKIN)), "tradyFarmerTargets.comment");
 
-	private static String getItemId(Item item)
-	{
-		return Registry.ITEM.getId(item).toString();
-	}
+	//////////////////////////
+	//  TweakerMore Setting //
+	//////////////////////////
 
-	public static void initCallbacks()
-	{
-		TweakerMoreConfigs.COPY_SIGN_TEXT_TO_CLIPBOARD.getKeybind().setCallback(SignTextCopier::copySignText);
-		TweakerMoreConfigs.OPEN_TWEAKERMORE_CONFIG_GUI.getKeybind().setCallback((action, key) -> {
-			GuiBase.openGui(new TweakermoreConfigGui());
-			return true;
-		});
-	}
+	@Config(value = Config.Type.HOTKEY, category = Config.Category.SETTING)
+	public static final ConfigHotkey OPEN_TWEAKERMORE_CONFIG_GUI = newConfigHotKey("openTweakerMoreConfigGui", "K,C");
+	@Config(value = Config.Type.TWEAK, category = Config.Category.SETTING)
+	public static final ConfigBooleanHotkeyed TWEAKERMORE_DEBUG_MODE = newConfigBooleanHotkeyed("tweakerMoreDebugMode");
 
 	/**
 	 * ============================
@@ -83,9 +114,13 @@ public class TweakerMoreConfigs
 	 * ============================
 	 */
 
-	private static final Map<Config.Type, List<IConfigBase>> OPTION_SETS = Util.make(() -> {
-		HashMap<Config.Type, List<IConfigBase>> map = Maps.newHashMap();
-		map.put(Config.Type.TWEAK, new ArrayList<>(TweakerMoreToggles.getFeatureToggles()));
+	private static final List<TweakerMoreOption> OPTIONS = Lists.newArrayList();
+	private static final Map<Config.Category, List<TweakerMoreOption>> CATEGORY_TO_OPTION = Maps.newLinkedHashMap();
+	private static final Map<Config.Type, List<TweakerMoreOption>> TYPE_TO_OPTION = Maps.newLinkedHashMap();
+	private static final Map<IConfigBase, TweakerMoreOption> CONFIG_TO_OPTION = Maps.newLinkedHashMap();
+
+	static
+	{
 		for (Field field : TweakerMoreConfigs.class.getDeclaredFields())
 		{
 			Config annotation = field.getAnnotation(Config.class);
@@ -93,11 +128,12 @@ public class TweakerMoreConfigs
 			{
 				try
 				{
-					IConfigBase option = (IConfigBase)field.get(null);
-					for (Config.Type type : annotation.value())
-					{
-						map.computeIfAbsent(type, key -> Lists.newArrayList()).add(option);
-					}
+					IConfigBase configBase = (IConfigBase)field.get(null);
+					TweakerMoreOption tweakerMoreOption = new TweakerMoreOption(annotation, configBase);
+					OPTIONS.add(tweakerMoreOption);
+					CATEGORY_TO_OPTION.computeIfAbsent(tweakerMoreOption.getCategory(), k -> Lists.newArrayList()).add(tweakerMoreOption);
+					TYPE_TO_OPTION.computeIfAbsent(tweakerMoreOption.getType(), k -> Lists.newArrayList()).add(tweakerMoreOption);
+					CONFIG_TO_OPTION.put(tweakerMoreOption.getOption(), tweakerMoreOption);
 				}
 				catch (IllegalAccessException e)
 				{
@@ -105,39 +141,32 @@ public class TweakerMoreConfigs
 				}
 			}
 		}
-		return map;
-	});
-
-	@SuppressWarnings("unchecked")
-	public static <T extends IConfigBase> List<T> getOptions(Config.Type optionType)
-	{
-		return (List<T>)OPTION_SETS.getOrDefault(optionType, Lists.newArrayList());
 	}
 
-	public static List<IConfigBase> getOptions(Predicate<Config.Type> predicate)
+	public static List<TweakerMoreOption> getOptions(Config.Category categoryType)
 	{
-		return OPTION_SETS.keySet().stream().
-				filter(predicate).
-				map(OPTION_SETS::get).
-				flatMap(Collection::stream).
-				collect(Collectors.toList());
+		return CATEGORY_TO_OPTION.getOrDefault(categoryType, Collections.emptyList());
 	}
 
-	public static <T extends IConfigBase> ImmutableList<T> updateOptionList(List<T> originalConfig, Config.Type optionType)
+	public static List<TweakerMoreOption> getOptions(Config.Type optionType)
 	{
-		List<T> optionList = Lists.newArrayList(originalConfig);
-		optionList.addAll(getOptions(optionType));
-		return ImmutableList.copyOf(optionList);
+		return TYPE_TO_OPTION.getOrDefault(optionType, Collections.emptyList());
 	}
 
-	private static final String CONFIG_FILE_NAME = TweakerMoreMod.MOD_ID + ".json";
-
-	private static File getConfigFile()
+	public static Stream<IConfigBase> getAllConfigOptionStream()
 	{
-		return FabricLoader.getInstance().getConfigDir().resolve(CONFIG_FILE_NAME).toFile();
+		return OPTIONS.stream().map(TweakerMoreOption::getOption);
 	}
 
-	private static JsonObject ROOT_JSON_OBJ = new JsonObject();
+	public static Optional<TweakerMoreOption> getOptionFromConfig(IConfigBase iConfigBase)
+	{
+		return Optional.ofNullable(CONFIG_TO_OPTION.get(iConfigBase));
+	}
+
+	public static boolean hasConfig(IConfigBase iConfigBase)
+	{
+		return getOptionFromConfig(iConfigBase).isPresent();
+	}
 
 	/**
 	 * ====================
@@ -145,9 +174,11 @@ public class TweakerMoreConfigs
 	 * ====================
 	 */
 
+	private static JsonObject ROOT_JSON_OBJ = new JsonObject();
+
 	public static void loadFromFile()
 	{
-		File configFile = getConfigFile();
+		File configFile = FileUtil.getConfigFile();
 		if (configFile.exists() && configFile.isFile() && configFile.canRead())
 		{
 			JsonElement element = JsonUtils.parseJsonFile(configFile);
@@ -155,31 +186,58 @@ public class TweakerMoreConfigs
 			if (element != null && element.isJsonObject())
 			{
 				JsonObject root = element.getAsJsonObject();
-
-				ConfigUtils.readConfigBase(root, "Generic", getOptions(Config.Type.GENERIC));
-				ConfigUtils.readConfigBase(root, "GenericHotkeys", getOptions(Config.Type.HOTKEY));
-				ConfigUtils.readConfigBase(root, "Lists", getOptions(Config.Type.LIST));
-				ConfigUtils.readHotkeyToggleOptions(root, "TweakHotkeys", "TweakToggles", getOptions(Config.Type.TWEAK));
-				ConfigUtils.readHotkeyToggleOptions(root, "DisableHotkeys", "DisableToggles", getOptions(Config.Type.DISABLE));
-				ConfigUtils.readConfigBase(root, "Config", getOptions(Config.Type.CONFIG));
-
+				loadFromJson(root);
 				ROOT_JSON_OBJ = root;
 			}
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	private static <T extends IConfigBase> List<T> getConfigOptions(Config.Type optionType)
+	{
+		return (List<T>)getOptions(optionType).stream().map(TweakerMoreOption::getOption).collect(Collectors.toList());
+	}
+
+	public static void loadFromJson(JsonObject jsonObject)
+	{
+		ConfigUtils.readConfigBase(jsonObject, "Generic", getConfigOptions(Config.Type.GENERIC));
+		ConfigUtils.readConfigBase(jsonObject, "GenericHotkeys", getConfigOptions(Config.Type.HOTKEY));
+		ConfigUtils.readConfigBase(jsonObject, "Lists", getConfigOptions(Config.Type.LIST));
+		ConfigUtils.readHotkeyToggleOptions(jsonObject, "TweakHotkeys", "TweakToggles", getConfigOptions(Config.Type.TWEAK));
+		ConfigUtils.readHotkeyToggleOptions(jsonObject, "DisableHotkeys", "DisableToggles", getConfigOptions(Config.Type.DISABLE));
+
+		onConfigLoaded();
+	}
+
+	private static void onConfigLoaded()
+	{
+		TweakerMoreConfigs.HAND_RESTORE_RESTRICTION.setListType((UsageRestriction.ListType)TweakerMoreConfigs.HAND_RESTORE_LIST_TYPE.getOptionListValue());
+		TweakerMoreConfigs.HAND_RESTORE_RESTRICTION.setListContents(TweakerMoreConfigs.HAND_RESTORE_BLACKLIST.getStrings(), TweakerMoreConfigs.HAND_RESTORE_WHITELIST.getStrings());
+	}
+
 	public static void saveToFile()
 	{
-		File configFile = getConfigFile();
+		File configFile = FileUtil.getConfigFile();
 		JsonObject root = ROOT_JSON_OBJ;
 
-		ConfigUtils.writeConfigBase(root, "Generic", getOptions(Config.Type.GENERIC));
-		ConfigUtils.writeConfigBase(root, "GenericHotkeys", getOptions(Config.Type.HOTKEY));
-		ConfigUtils.writeConfigBase(root, "Lists", getOptions(Config.Type.LIST));
-		ConfigUtils.writeHotkeyToggleOptions(root, "TweakHotkeys", "TweakToggles", getOptions(Config.Type.TWEAK));
-		ConfigUtils.writeHotkeyToggleOptions(root, "DisableHotkeys", "DisableToggles", getOptions(Config.Type.DISABLE));
-		ConfigUtils.writeConfigBase(root, "Config", getOptions(Config.Type.CONFIG));
+		ConfigUtils.writeConfigBase(root, "Generic", getConfigOptions(Config.Type.GENERIC));
+		ConfigUtils.writeConfigBase(root, "GenericHotkeys", getConfigOptions(Config.Type.HOTKEY));
+		ConfigUtils.writeConfigBase(root, "Lists", getConfigOptions(Config.Type.LIST));
+		ConfigUtils.writeHotkeyToggleOptions(root, "TweakHotkeys", "TweakToggles", getConfigOptions(Config.Type.TWEAK));
+		ConfigUtils.writeHotkeyToggleOptions(root, "DisableHotkeys", "DisableToggles", getConfigOptions(Config.Type.DISABLE));
 
 		JsonUtils.writeJsonToFile(root, configFile);
+	}
+
+	@Override
+	public void load()
+	{
+		loadFromFile();
+	}
+
+	@Override
+	public void save()
+	{
+		saveToFile();
 	}
 }

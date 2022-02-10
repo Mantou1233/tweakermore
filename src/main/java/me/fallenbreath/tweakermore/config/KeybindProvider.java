@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class KeybindProvider implements IKeybindProvider
 {
-	private static final List<IHotkey> ALL_CUSTOM_HOTKEYS = TweakerMoreConfigs.getOptions(Config.Type.CONFIG).stream().
+	private static final List<IHotkey> ALL_CUSTOM_HOTKEYS = TweakerMoreConfigs.getAllConfigOptionStream().
 			filter(option -> option instanceof IHotkey).
 			map(option -> (IHotkey)option).
 			collect(Collectors.toList());
@@ -24,6 +24,6 @@ public class KeybindProvider implements IKeybindProvider
 	@Override
 	public void addHotkeys(IKeybindManager manager)
 	{
-		manager.addHotkeysForCategory(TweakerMoreMod.MOD_NAME, "tweakermore.hotkeys.category.config_hotkeys", ALL_CUSTOM_HOTKEYS);
+		manager.addHotkeysForCategory(TweakerMoreMod.MOD_NAME, "tweakermore.hotkeys.category.main", ALL_CUSTOM_HOTKEYS);
 	}
 }

@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "TweakerMore",
-  "description": "An addon of masa's tweakeroo mod",
+  "description": "A collection of client-side tweak kits for enhance your Minecraft game experience",
   "authors": [
     "Fallen_Breath"
   ],
@@ -20,9 +20,6 @@
     "client": [
       "me.fallenbreath.tweakermore.TweakerMoreMod"
     ],
-    "mm:early_risers": [
-      "me.fallenbreath.tweakermore.config.TogglesEarlyRiser"
-    ],
     "modmenu": [
       "me.fallenbreath.tweakermore.compat.modmenu.ModMenuApiImpl"
     ]
@@ -32,8 +29,7 @@
   ],
 
   "depends": {
-    "tweakeroo": "*",
-    "itemscroller": "*",
-    "litematica": "*"
+    "fabricloader": ">=0.10.4",
+    "malilib": "*"
   }
 }
