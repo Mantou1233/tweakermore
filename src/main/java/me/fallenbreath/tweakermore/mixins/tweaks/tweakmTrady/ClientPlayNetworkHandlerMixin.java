@@ -1,4 +1,4 @@
-package me.fallenbreath.tweakermore.mixins.tweaks.tweakmTradyLapis;
+package me.fallenbreath.tweakermore.mixins.tweaks.tweakmTrady;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;

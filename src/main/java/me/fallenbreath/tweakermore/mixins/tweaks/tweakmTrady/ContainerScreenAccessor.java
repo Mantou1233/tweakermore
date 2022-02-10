@@ -1,4 +1,4 @@
-package me.fallenbreath.tweakermore.mixins.tweaks.tweakmTradyLapis;
+package me.fallenbreath.tweakermore.mixins.tweaks.tweakmTrady;
 
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.container.Slot;

@@ -1,4 +1,4 @@
-package me.fallenbreath.tweakermore.mixins.tweaks.tweakmTradyLapis;
+package me.fallenbreath.tweakermore.mixins.tweaks.tweakmTrady;
 
 import me.fallenbreath.tweakermore.impl.tweakmTrady.TradyMerchantContainer;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
