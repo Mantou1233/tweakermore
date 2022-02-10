@@ -62,16 +62,16 @@
 
   "// Trady": "================================================",
 
-  "tweakermore.tweakmTradyLapis": "tweakmTradyLapis | Trady青金石交易",
+  "tweakermore.tweakmTradyLapis": "青金石交易助手",
   "tweakermore.tweakmTradyLapis.comment": "[TIS] 1.13牧师青金石交易助手\n1. 1x腐肉解锁青金石交易\n2. 当青金石交易为1->2时进行交易\n3. 当青金石交易上锁且没交易过红石粉时，交易一次红石粉",
   "tweakermore.tweakmTradyLapis.pretty_name": "[TIS] 1.13牧师青金石交易助手",
-  "tweakermore.tweakmTradyFarmer": "tweakmTradyFarmer | Trady农民交易",
+  "tweakermore.tweakmTradyFarmer": "农民交易助手",
   "tweakermore.tweakmTradyFarmer.comment": "[TIS] 1.13农民交易助手\n交易出售所有除了小麦西瓜外的农作物\n用于交易的物品可以在列表选项tradyFarmerTargets中修改",
   "tweakermore.tweakmTradyFarmer.pretty_name": "[TIS] 1.13农民交易助手",
 
-  "tweakermore.tradyThrowIfFull": "tradyThrowIfFull | Trady背包满时扔出输出物品",
+  "tweakermore.tradyThrowIfFull": "背包满时扔出输出物品",
   "tweakermore.tradyThrowIfFull.comment": "在使用交易助手时，如果背包满了，则将交易得到的输出物品扔出去，而非取消交易尝试",
-  "tweakermore.tradyFarmerTargets": "tradyFarmerTargets | Trady农民交易目标物品",
+  "tweakermore.tradyFarmerTargets": "农民交易目标物品",
   "tweakermore.tradyFarmerTargets.comment": "在农民交易助手中用于换取绿宝石的物品",
 
   "// Setting": "================================================",
