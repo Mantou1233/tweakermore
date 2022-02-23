@@ -177,16 +177,16 @@ public class TweakerMoreConfigs
 	////////////////////
 
 	@Config(value = Config.Type.TWEAK, category = Config.Category.TRADY)
-	public static final ConfigBooleanHotkeyed TWEAKM_TRADY_LAPIS = newConfigBooleanHotkeyed("tweakmTradyLapis");
+	public static final TweakerMoreConfigBooleanHotkeyed TWEAKM_TRADY_LAPIS = newConfigBooleanHotkeyed("tweakmTradyLapis");
 
 	@Config(value = Config.Type.TWEAK,category = Config.Category.TRADY)
-	public static final ConfigBooleanHotkeyed TWEAKM_TRADY_FARMER = newConfigBooleanHotkeyed("tweakmTradyFarmer");
+	public static final TweakerMoreConfigBooleanHotkeyed TWEAKM_TRADY_FARMER = newConfigBooleanHotkeyed("tweakmTradyFarmer");
 
 	@Config(value = Config.Type.GENERIC, category = Config.Category.TRADY)
-	public static final ConfigBoolean TRADY_THROW_IF_FULL = newConfigBoolean("tradyThrowIfFull", false);
+	public static final TweakerMoreConfigBoolean TRADY_THROW_IF_FULL = newConfigBoolean("tradyThrowIfFull", false);
 
 	@Config(value = Config.Type.LIST, category = Config.Category.TRADY)
-	public static final ConfigStringList TRADY_FARMER_TARGETS = newConfigStringList("tradyFarmerTargets", ImmutableList.of(RegistryUtil.getItemId(Items.CARROT), RegistryUtil.getItemId(Items.POTATO), RegistryUtil.getItemId(Items.PUMPKIN)));
+	public static final TweakerMoreConfigStringList TRADY_FARMER_TARGETS = newConfigStringList("tradyFarmerTargets", ImmutableList.of(RegistryUtil.getItemId(Items.CARROT), RegistryUtil.getItemId(Items.POTATO), RegistryUtil.getItemId(Items.PUMPKIN)));
 
 	//////////////////////////
 	//  TweakerMore Setting //
