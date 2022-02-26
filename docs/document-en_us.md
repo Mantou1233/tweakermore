@@ -52,8 +52,9 @@ Modify the maximum number of history messages stored in the chat hud
 - Default value: `100`
 - Minimum value: `100`
 - Maximum value: `10000`
-- Conflicted mods:
-  - `raise-chat-limit`
+- Mod restrictions:
+  - Conflicted mods:
+    - `raise-chat-limit`
 
 
 ### connectionSimulatedDelay
@@ -77,9 +78,24 @@ Copy texts in the sign you are pointing to into the clipboard
 
 - Category: Tweaks
 - Type: hotkey
-- Default value: *none*
+- Default value: *no hotkey*
 
 ![copySignTextToClipBoard](assets/copySignTextToClipBoard-en_us.png)
+
+
+### disableCameraFrustumCulling
+
+Disable rendering culling using camera's frustum, i.e. stuffs outside the player's fov will also be rendered
+
+Affects both block and entity rendering
+
+A use case is to ensure the integrity of shadows when using shaders
+
+Has significant impact on framerate
+
+- Category: Tweaks
+- Type: togglable hotkey
+- Default value: *no hotkey*, `false`
 
 
 ### disableLightUpdates
@@ -88,7 +104,7 @@ Yeets client-side light updates
 
 - Category: Tweaks
 - Type: togglable hotkey
-- Default value: `false`, `false`
+- Default value: *no hotkey*, `false`
 
 
 ### disablePistonBlockBreakingParticle
@@ -97,9 +113,10 @@ Remove block breaking particles when pistons break blocks
 
 - Category: Tweaks
 - Type: togglable hotkey
-- Default value: `false`, `false`
-- Required mods:
-  - `minecraft >=1.17`
+- Default value: *no hotkey*, `false`
+- Mod restrictions:
+  - Required mods:
+    - `minecraft >=1.17`
 
 
 ### disableRedstoneWireParticle
@@ -108,7 +125,7 @@ Disable particle of redstone wire
 
 - Category: Tweaks
 - Type: togglable hotkey
-- Default value: `false`, `false`
+- Default value: *no hotkey*, `false`
 
 
 ### handRestockBlackList
@@ -118,8 +135,9 @@ The items that will NOT trigger tweakHandRestock
 - Category: Tweaks
 - Type: string list
 - Default value: `[minecraft:lava_bucket]`
-- Required mods:
-  - `tweakeroo`
+- Mod restrictions:
+  - Required mods:
+    - `tweakeroo`
 
 
 ### handRestockListType
@@ -130,8 +148,9 @@ The item restriction type for tweakHandRestock
 - Type: option list
 - Default value: `none`
 - Available options: `None`, `Black List`
-- Required mods:
-  - `tweakeroo`
+- Mod restrictions:
+  - Required mods:
+    - `tweakeroo`
 
 
 ### handRestockWhiteList
@@ -141,8 +160,9 @@ The items that will trigger tweakHandRestock
 - Category: Tweaks
 - Type: string list
 - Default value: `[minecraft:bucket]`
-- Required mods:
-  - `tweakeroo`
+- Mod restrictions:
+  - Required mods:
+    - `tweakeroo`
 
 
 ### legacyF3NLogic
@@ -154,8 +174,9 @@ Modify the logic of hotkey F3 + N back to 1.15 and before
 - Category: Tweaks
 - Type: boolean
 - Default value: `false`
-- Required mods:
-  - `minecraft >=1.16`
+- Mod restrictions:
+  - Required mods:
+    - `minecraft >=1.16`
 
 
 ### maxChatHudHeight
@@ -207,7 +228,7 @@ so the server think that the inventory is out of sync then do resync
 
 - Category: Tweaks
 - Type: hotkey
-- Default value: *none*
+- Default value: *no hotkey*
 
 
 ### safeAfkHealthThreshold
@@ -253,9 +274,10 @@ and then close the container
 
 - Category: Tweaks
 - Type: togglable hotkey
-- Default value: `false`, `false`
-- Required mods:
-  - `itemscroller`
+- Default value: *no hotkey*, `false`
+- Mod restrictions:
+  - Required mods:
+    - `itemscroller`
 
 
 ### tweakmAutoFillContainer
@@ -268,9 +290,10 @@ and then close the container
 
 - Category: Tweaks
 - Type: togglable hotkey
-- Default value: `false`, `false`
-- Required mods:
-  - `itemscroller`
+- Default value: *no hotkey*, `false`
+- Mod restrictions:
+  - Required mods:
+    - `itemscroller`
 
 
 ### tweakmAutoPickSchematicBlock
@@ -283,10 +306,27 @@ Does not work with easy place mode
 
 - Category: Tweaks
 - Type: togglable hotkey
-- Default value: `false`, `false`
-- Required mods:
-  - `tweakeroo`
-  - `litematica`
+- Default value: *no hotkey*, `false`
+- Mod restrictions:
+  - Required mods:
+    - `tweakeroo`
+    - `litematica`
+
+
+### tweakmFlawlessFrames
+
+Forced client to render all changes in loaded chunk for each frames
+
+using the logic from replay mod which is used in its rendering tasks
+
+WARNING: Expect client lag spike with enabled
+
+- Category: Tweaks
+- Type: togglable hotkey
+- Default value: *no hotkey*, `false`
+- Mod restrictions:
+  - Required mods:
+    - `replaymod`
 
 
 ### tweakmSafeAfk
@@ -297,7 +337,18 @@ Health threshold to disconnect can be set via safeAfkHealthThreshold
 
 - Category: Tweaks
 - Type: togglable hotkey
-- Default value: `false`, `false`
+- Default value: *no hotkey*, `false`
+
+
+### tweakmUnlimitedEntityRenderDistance
+
+Set client-side entity render distance to unlimited
+
+Still requires the server to send entity packets via EntityTracker properly
+
+- Category: Tweaks
+- Type: togglable hotkey
+- Default value: *no hotkey*, `false`
 
 
 ### villagerOfferUsesDisplay
@@ -333,9 +384,26 @@ e.g. broken mass craft
 - Category: Mods Tweaks
 - Type: boolean
 - Default value: `false`
-- Required mods:
-  - `easiercrafting`
-  - `itemscroller`
+- Mod restrictions:
+  - Required mods:
+    - `easiercrafting`
+    - `itemscroller`
+
+![eCraftItemScrollerCompact](assets/eCraftItemScrollerCompact.png)
+
+
+### ofRemoveSignTextRenderDistance
+
+Remove the sign text render distance limit from Optifine
+
+Back to vanilla behavior where sign text is always rendered together with the sign block
+
+- Category: Mods Tweaks
+- Type: boolean
+- Default value: `false`
+- Mod restrictions:
+  - Required mods:
+    - `optifabric`
 
 
 ### ofUnlockF3FpsLimit
@@ -345,9 +413,59 @@ Removed 10 FPS render limit for F3 debug hud
 - Category: Mods Tweaks
 - Type: boolean
 - Default value: `false`
-- Required mods:
-  - `optifabric`
-  - `minecraft >=1.15`
+- Mod restrictions:
+  - Required mods:
+    - `optifabric`
+    - `minecraft >=1.15`
+
+
+### replayAccurateTimelineTimestamp
+
+Display timestamps accurate to milliseconds on the timeline in replay mod
+
+- Category: Mods Tweaks
+- Type: boolean
+- Default value: `false`
+- Mod restrictions:
+  - Required mods:
+    - `replaymod`
+
+![replayAccurateTimelineTimestamp](assets/replayAccurateTimelineTimestamp.png)
+
+
+### replayFlySpeedLimitMultiplier
+
+Multiple the camera fly speed upper limit in replay mod with given value
+
+So the maximum fly speed can be increased
+
+- Category: Mods Tweaks
+- Type: integer
+- Default value: `1`
+- Minimum value: `1`
+- Maximum value: `30`
+- Mod restrictions:
+  - Required mods:
+    - `replaymod`
+
+
+### shaderGameTimeAsWorldTime
+
+Use game time instead of day time as uniform value "worldTime" for Optifine/Iris shaders
+
+So with gamerule doDaylightCycle false this timer variable still increases
+
+- Category: Mods Tweaks
+- Type: boolean
+- Default value: `false`
+- Mod restrictions:
+  - Required mods:
+    - `optifabric`
+
+  *or*
+
+  - Required mods:
+    - `iris`
 
 
 ### xmapNoSessionFinalizationWait
@@ -361,8 +479,9 @@ Might have some side effects though
 - Category: Mods Tweaks
 - Type: boolean
 - Default value: `false`
-- Required mods:
-  - `xaeroworldmap`
+- Mod restrictions:
+  - Required mods:
+    - `xaeroworldmap`
 
 
 ## Setting
@@ -406,6 +525,6 @@ and debugging related functions will be enabled
 
 - Category: Setting
 - Type: togglable hotkey
-- Default value: `false`, `false`
+- Default value: *no hotkey*, `false`
 
 
