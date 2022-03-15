@@ -17,6 +17,7 @@ import me.fallenbreath.tweakermore.gui.TweakerMoreConfigGui;
 import me.fallenbreath.tweakermore.impl.copySignTextToClipBoard.SignTextCopier;
 import me.fallenbreath.tweakermore.impl.eCraftMassCraftCompact.EasierCraftingRegistrar;
 import me.fallenbreath.tweakermore.impl.refreshInventory.InventoryRefresher;
+import me.fallenbreath.tweakermore.impl.tweakerMoreDevMixinAudit.MixinAuditHelper;
 import me.fallenbreath.tweakermore.impl.tweakmFlawlessFrames.FlawlessFramesHandler;
 import me.fallenbreath.tweakermore.util.RegistryUtil;
 import me.fallenbreath.tweakermore.util.doc.DocumentGenerator;
@@ -57,11 +58,23 @@ public class TweakerMoreConfigs
 	@Config(Config.Type.GENERIC)
 	public static final TweakerMoreConfigDouble BOSS_BAR_SCALE = newConfigDouble("bossBarScale", 1, 0.001, 2);
 
-	@Config(value = Config.Type.GENERIC, restriction = @Restriction(conflict = @Condition(raise_chat_limit)))
+	@Config(
+			value = Config.Type.GENERIC,
+			restriction = @Restriction(conflict = {
+					@Condition(compact_chat),
+					@Condition(more_chat_history),
+					@Condition(parachute),
+					@Condition(raise_chat_limit),
+					@Condition(wheres_my_chat_history)
+			})
+	)
 	public static final TweakerMoreConfigInteger CHAT_MESSAGE_LIMIT = newConfigInteger("chatMessageLimit", 100, 100, 10000);
 
 	@Config(Config.Type.GENERIC)
 	public static final TweakerMoreConfigInteger CONNECTION_SIMULATED_DELAY = newConfigInteger("connectionSimulatedDelay", 0, 0, 15_000);
+
+	@Config(Config.Type.GENERIC)
+	public static final TweakerMoreConfigInteger DAYTIME_OVERRIDE_VALUE = newConfigInteger("daytimeOverrideValue", 0, 0, 24000);
 
 	@Config(value = Config.Type.GENERIC, restriction = @Restriction(require = @Condition(value = minecraft, versionPredicates = ">=1.16")))
 	public static final TweakerMoreConfigBoolean LEGACY_F3_N_LOGIC = newConfigBoolean("legacyF3NLogic", false);
@@ -124,6 +137,18 @@ public class TweakerMoreConfigs
 			})
 	)
 	public static final TweakerMoreConfigBooleanHotkeyed TWEAKM_AUTO_PICK_SCHEMATIC_BLOCK = newConfigBooleanHotkeyed("tweakmAutoPickSchematicBlock");
+
+	@Config(
+			value = Config.Type.TWEAK,
+			restriction = @Restriction(require = {
+					@Condition(litematica),
+					@Condition(itemscroller)
+			})
+	)
+	public static final TweakerMoreConfigBooleanHotkeyed TWEAKM_AUTO_TAKE_MATERIAL_LIST_ITEM = newConfigBooleanHotkeyed("tweakmAutoCollectMaterialListItem");
+
+	@Config(Config.Type.TWEAK)
+	public static final TweakerMoreConfigBooleanHotkeyed TWEAKM_DAYTIME_OVERRIDE = newConfigBooleanHotkeyed("tweakmDaytimeOverride");
 
 	@Config(value = Config.Type.TWEAK, restriction = @Restriction(require = @Condition(replay_mod)))
 	public static final TweakerMoreConfigBooleanHotkeyed TWEAKM_FLAWLESS_FRAMES = newConfigBooleanHotkeyed("tweakmFlawlessFrames");
@@ -252,6 +277,9 @@ public class TweakerMoreConfigs
 	public static final TweakerMoreConfigInteger TWEAKERMORE_DEBUG_DOUBLE = newConfigInteger("tweakerMoreDebugDouble", 0, -1, 1);
 
 	@Config(value = Config.Type.GENERIC, category = Config.Category.SETTING, devOnly = true)
+	public static final TweakerMoreConfigHotkey TWEAKERMORE_DEV_MIXIN_AUDIT = newConfigHotKey("tweakerMoreDevMixinAudit", "");
+
+	@Config(value = Config.Type.GENERIC, category = Config.Category.SETTING, devOnly = true)
 	public static final TweakerMoreConfigHotkey TWEAKERMORE_DEV_PRINT_DOC = newConfigHotKey("tweakerMoreDevPrintDoc", "");
 
 	/**
@@ -277,6 +305,7 @@ public class TweakerMoreConfigs
 
 		// debugs
 		TWEAKERMORE_DEBUG_MODE.setValueChangeCallback(redrawConfigGui);
+		TWEAKERMORE_DEV_MIXIN_AUDIT.getKeybind().setCallback(MixinAuditHelper::onHotKey);
 		TWEAKERMORE_DEV_PRINT_DOC.getKeybind().setCallback(DocumentGenerator::onHotKey);
 	}
 

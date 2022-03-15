@@ -54,7 +54,11 @@
 - 最大值: `10000`
 - 模组约束:
   - 冲突模组:
-    - `raise-chat-limit`
+    - CompactChat (`compactchat`)
+    - MoreChatHistory (`morechathistory`)
+    - Parachute (`parachute`)
+    - Raise Chat Limit (`raise-chat-limit`)
+    - Where's My Chat History (`wmch`)
 
 
 ### 网络连接延迟模拟 (connectionSimulatedDelay)
@@ -81,6 +85,17 @@
 - 默认值: *无快捷键*
 
 ![copySignTextToClipBoard](assets/copySignTextToClipBoard-zh_cn.png)
+
+
+### 覆盖世界时间数值 (daytimeOverrideValue)
+
+用于功能tweakmDaytimeOverride的客户端的世界时间数值
+
+- 分类: 功能
+- 类型: 整数
+- 默认值: `0`
+- 最小值: `0`
+- 最大值: `24000`
 
 
 ### 禁用相机视锥体渲染剔除 (disableCameraFrustumCulling)
@@ -116,7 +131,7 @@
 - 默认值: *无快捷键*, `false`
 - 模组约束:
   - 依赖模组:
-    - `minecraft >=1.17`
+    - Minecraft (`minecraft`) ` >=1.17`
 
 
 ### 禁用红石粉粒子效果 (disableRedstoneWireParticle)
@@ -137,7 +152,7 @@
 - 默认值: `[minecraft:lava_bucket]`
 - 模组约束:
   - 依赖模组:
-    - `tweakeroo`
+    - Tweakeroo (`tweakeroo`)
 
 
 ### 自动补货名单约束类型 (handRestockListType)
@@ -150,7 +165,7 @@ tweakHandRestock功能的物品名单约束类型
 - 可用选项: `None`, `Black List`
 - 模组约束:
   - 依赖模组:
-    - `tweakeroo`
+    - Tweakeroo (`tweakeroo`)
 
 
 ### 自动补货白名单 (handRestockWhiteList)
@@ -162,7 +177,7 @@ tweakHandRestock功能的物品名单约束类型
 - 默认值: `[minecraft:bucket]`
 - 模组约束:
   - 依赖模组:
-    - `tweakeroo`
+    - Tweakeroo (`tweakeroo`)
 
 
 ### 旧版F3+N逻辑 (legacyF3NLogic)
@@ -176,7 +191,7 @@ tweakHandRestock功能的物品名单约束类型
 - 默认值: `false`
 - 模组约束:
   - 依赖模组:
-    - `minecraft >=1.16`
+    - Minecraft (`minecraft`) ` >=1.16`
 
 
 ### 最大聊天界面高度 (maxChatHudHeight)
@@ -277,7 +292,22 @@ tweakHandRestock功能的物品名单约束类型
 - 默认值: *无快捷键*, `false`
 - 模组约束:
   - 依赖模组:
-    - `itemscroller`
+    - Item Scroller (`itemscroller`)
+
+
+### 自动收集材料列表物品 (tweakmAutoCollectMaterialListItem)
+
+打开容器后，自动收集litematica材料列表中缺失的物品至玩家物品栏
+
+然后关闭容器
+
+- 分类: 功能
+- 类型: 可开关型热键
+- 默认值: *无快捷键*, `false`
+- 模组约束:
+  - 依赖模组:
+    - Litematica (`litematica`)
+    - Item Scroller (`itemscroller`)
 
 
 ### 自动装填容器 (tweakmAutoFillContainer)
@@ -293,14 +323,14 @@ tweakHandRestock功能的物品名单约束类型
 - 默认值: *无快捷键*, `false`
 - 模组约束:
   - 依赖模组:
-    - `itemscroller`
+    - Item Scroller (`itemscroller`)
 
 
 ### 自动选择原理图方块 (tweakmAutoPickSchematicBlock)
 
 在放置方块前自动选择原理图中的方块对应的物品
 
-逻辑同litematica mod的pickBlock功能，你需要在litematica mod中启用pickBlockEnabled选项
+逻辑同litematica模组的pickBlock功能，你需要在litematica mod中启用pickBlockEnabled选项
 
 在轻松放置开启时无效
 
@@ -309,8 +339,19 @@ tweakHandRestock功能的物品名单约束类型
 - 默认值: *无快捷键*, `false`
 - 模组约束:
   - 依赖模组:
-    - `tweakeroo`
-    - `litematica`
+    - Tweakeroo (`tweakeroo`)
+    - Litematica (`litematica`)
+
+
+### 覆盖世界时间 (tweakmDaytimeOverride)
+
+覆盖客户端中的世界时间
+
+对服务端无影响
+
+- 分类: 功能
+- 类型: 可开关型热键
+- 默认值: *无快捷键*, `false`
 
 
 ### 无瑕世界渲染 (tweakmFlawlessFrames)
@@ -326,7 +367,7 @@ tweakHandRestock功能的物品名单约束类型
 - 默认值: *无快捷键*, `false`
 - 模组约束:
   - 依赖模组:
-    - `replaymod`
+    - Replay mod (`replaymod`)
 
 
 ### 安全挂机 (tweakmSafeAfk)
@@ -386,8 +427,8 @@ tweakHandRestock功能的物品名单约束类型
 - 默认值: `false`
 - 模组约束:
   - 依赖模组:
-    - `easiercrafting`
-    - `itemscroller`
+    - EasierCrafting (`easiercrafting`)
+    - Item Scroller (`itemscroller`)
 
 ![eCraftItemScrollerCompact](assets/eCraftItemScrollerCompact.png)
 
@@ -403,7 +444,7 @@ tweakHandRestock功能的物品名单约束类型
 - 默认值: `false`
 - 模组约束:
   - 依赖模组:
-    - `optifabric`
+    - Optifine (`optifabric`)
 
 
 ### Optifine解锁F3帧数限制 (ofUnlockF3FpsLimit)
@@ -415,8 +456,8 @@ tweakHandRestock功能的物品名单约束类型
 - 默认值: `false`
 - 模组约束:
   - 依赖模组:
-    - `optifabric`
-    - `minecraft >=1.15`
+    - Optifine (`optifabric`)
+    - Minecraft (`minecraft`) ` >=1.15`
 
 
 ### Replay精准时间戳显示 (replayAccurateTimelineTimestamp)
@@ -428,7 +469,7 @@ tweakHandRestock功能的物品名单约束类型
 - 默认值: `false`
 - 模组约束:
   - 依赖模组:
-    - `replaymod`
+    - Replay mod (`replaymod`)
 
 ![replayAccurateTimelineTimestamp](assets/replayAccurateTimelineTimestamp.png)
 
@@ -446,7 +487,7 @@ tweakHandRestock功能的物品名单约束类型
 - 最大值: `30`
 - 模组约束:
   - 依赖模组:
-    - `replaymod`
+    - Replay mod (`replaymod`)
 
 
 ### 光影使用游戏时间作为世界时间 (shaderGameTimeAsWorldTime)
@@ -460,12 +501,12 @@ tweakHandRestock功能的物品名单约束类型
 - 默认值: `false`
 - 模组约束:
   - 依赖模组:
-    - `optifabric`
+    - Optifine (`optifabric`)
 
   *或*
 
   - 依赖模组:
-    - `iris`
+    - Iris (`iris`)
 
 
 ### xaero世界地图跳过会话结束等待 (xmapNoSessionFinalizationWait)
@@ -481,7 +522,7 @@ tweakHandRestock功能的物品名单约束类型
 - 默认值: `false`
 - 模组约束:
   - 依赖模组:
-    - `xaeroworldmap`
+    - Xaero's World Map (`xaeroworldmap`)
 
 
 ## 配置

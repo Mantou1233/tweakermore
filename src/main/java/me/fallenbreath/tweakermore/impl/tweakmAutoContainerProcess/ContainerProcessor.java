@@ -19,7 +19,8 @@ public abstract class ContainerProcessor
 {
 	private static final List<Processor> CONTAINER_PROCESSORS = ImmutableList.of(
 			new ContainerCleaner(),
-			new ContainerFiller()
+			new ContainerFiller(),
+			new ContainerMaterialListItemCollector()
 	);
 
 	private static boolean hasTweakEnabled()
@@ -36,6 +37,10 @@ public abstract class ContainerProcessor
 			// not inventory and not crafting table
 			if (player != null && screen instanceof ContainerScreen<?> && !(screen instanceof AbstractInventoryScreen) && !(screen instanceof CraftingTableScreen))
 			{
+				if (player.isSpectator())
+				{
+					return;
+				}
 				ContainerScreen<?> containerScreen = (ContainerScreen<?>)screen;
 				if (containerScreen.getContainer() != container || !((AutoProcessableScreen)screen).shouldProcess())
 				{
